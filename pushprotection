@@ -1,0 +1,3 @@
+git add TestSecrets.cs
+git commit -m "Test secret detection"
+git push origin main
