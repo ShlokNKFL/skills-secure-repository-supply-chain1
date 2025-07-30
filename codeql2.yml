@@ -1,0 +1,5 @@
+/ VULNERABILITY 2: Hard-coded API Keys and Secrets (CWE-798)
+        private const string CIBIL_API_KEY = "CIBIL_PROD_KEY_7f8e9d0a1b2c3e4f5a6b7c8d9e0f1a2b3c4d5e6f";
+        private const string RAZORPAY_SECRET = "rzp_live_secret_9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d";
+        private const string JWT_SIGNING_KEY = "super_secret_jwt_key_nabkisan_finance_2024_do_not_expose";
+        private const string ENCRYPTION_KEY = "AES256_encryption_key_customer_data_protection_2024";
