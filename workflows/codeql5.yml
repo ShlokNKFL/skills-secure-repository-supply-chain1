@@ -1,0 +1,7 @@
+// VULNERABILITY 5: Cross-Site Scripting (XSS) (CWE-79)
+        public string GenerateCustomerReport(string customerName, string reportType)
+        {
+            // VULNERABLE: No input sanitization
+            return $"<html><body><h1>Report for {customerName}</h1><p>Type: {reportType}</p></body></html>";
+            // Allows XSS: customerName = "<script>alert('XSS')</script>"
+        }
