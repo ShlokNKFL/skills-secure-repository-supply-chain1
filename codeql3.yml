@@ -1,0 +1,15 @@
+import pyodbc
+
+def get_customer_by_pan(pan_number):
+    connection_string = 'DRIVER={SQL Server};SERVER=your_server;DATABASE=your_db;UID=your_user;PWD=your_password'
+    connection = pyodbc.connect(connection_string)
+    cursor = connection.cursor()
+
+    # VULNERABLE: Direct string concatenation
+    query = f"SELECT CustomerId, Name, AccountNumber, CreditScore FROM Customers WHERE PANNumber = '{pan_number}'"
+
+    cursor.execute(query)
+    row = cursor.fetchone()
+    
+    connection.close()
+    return row  # You'd typically map this to a CustomerData object or dict
