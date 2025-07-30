@@ -1,0 +1,43 @@
+/**
+ * @name SQL injection in financial queries
+ * @description Detects potential SQL injection vulnerabilities in financial data queries
+ * @kind path-problem
+ * @problem.severity error
+ * @security-severity 9.9
+ * @precision high
+ * @id nabkisan/sql-injection-financial
+ * @tags security
+ *       external/cwe/cwe-89
+ */
+
+import csharp
+import semmle.code.csharp.security.dataflow.SqlInjectionQuery
+
+class FinancialTableAccess extends DataFlow::Node {
+  FinancialTableAccess() {
+    exists(StringLiteral sl |
+      sl = this.asExpr() and
+      sl.getValue().regexpMatch("(?i).*\\b(loan|customer|account|transaction|payment|credit|debit)\\b.*")
+    )
+  }
+}
+
+class FinancialSqlInjectionConfiguration extends SqlInjection::Configuration {
+  FinancialSqlInjectionConfiguration() { this = "FinancialSqlInjectionConfiguration" }
+  
+  override predicate isSink(DataFlow::Node sink) {
+    super.isSink(sink) and
+    exists(MethodCall mc |
+      mc.getAnArgument() = sink.asExpr() and
+      mc.getTarget().getName().regexpMatch("(?i).*(execute|query).*")
+    )
+  }
+  
+  override predicate isAdditionalTaintStep(DataFlow::Node pred, DataFlow::Node succ) {
+    exists(AddExpr add |
+      add.getAnOperand() = pred.asExpr() and
+      add = succ.asExpr() and
+      exists(FinancialTableAccess fta | fta.asExpr() = add.getAnOperand())
+    )
+  }
+}
