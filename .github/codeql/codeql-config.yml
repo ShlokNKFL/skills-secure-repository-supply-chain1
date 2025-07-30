@@ -1,0 +1,51 @@
+# .github/codeql/codeql-config.yml
+name: "NABKISAN CodeQL Configuration"
+
+# Specify which queries to run
+queries:
+  - uses: security-extended
+  - uses: security-and-quality
+
+# Paths to analyze
+paths:
+  - "src/"
+  - "NABKISAN.*/"
+  - "**/*.cs"
+
+# Paths to ignore (improve performance)
+paths-ignore:
+  - "docs/"
+  - "*.md"
+  - "**/bin/"
+  - "**/obj/"
+  - "**/packages/"
+  - "**/*.Designer.cs"
+  - "**/*.generated.cs"
+  - "**/Migrations/"
+  - "**/wwwroot/lib/"
+  - "**/node_modules/"
+  - "test-data/"
+  - "**/TestResults/"
+
+# Build configuration
+build-command: |
+  echo "Building NABKISAN Finance application..."
+  dotnet restore --verbosity minimal
+  dotnet build --configuration Release --no-restore --verbosity minimal
+
+# Custom query filters (reduce noise)
+query-filters:
+  - exclude:
+      id:
+        - "cs/local-variable-is-never-read"
+        - "cs/unused-using-directive"
+  - include:
+      tags:
+        - "security"
+        - "external/cwe"
+
+# Language-specific configuration
+packs:
+  csharp:
+    - codeql/csharp-queries:Security/
+    - codeql/csharp-queries:AlertSuppression.ql
